@@ -12,10 +12,10 @@ const WeekdayDateRangePicker: React.FC<WeekdayDateRangePickerProps> = ({
 }) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
-  // Trigger onChange callback when range is selected
   useEffect(() => {
     if (startDate && endDate) {
       const weekends = getWeekendsInRange(startDate, endDate);
@@ -35,8 +35,32 @@ const WeekdayDateRangePicker: React.FC<WeekdayDateRangePickerProps> = ({
       setEndDate(null);
     } else if (dateToSelect >= startDate) {
       setEndDate(dateToSelect);
+      setHoveredDate(null);
     } else {
       setStartDate(dateToSelect);
+    }
+  };
+
+  const handleDateHover = (date: Date) => {
+    if (!startDate || endDate || isWeekend(date)) return;
+    setHoveredDate(date);
+  };
+
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear((prevYear) => prevYear + 1);
+    } else {
+      setCurrentMonth((prevMonth) => prevMonth + 1);
+    }
+  };
+
+  const handlePreviousMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear((prevYear) => prevYear - 1);
+    } else {
+      setCurrentMonth((prevMonth) => prevMonth - 1);
     }
   };
 
@@ -88,13 +112,23 @@ const WeekdayDateRangePicker: React.FC<WeekdayDateRangePickerProps> = ({
         date >= startDate &&
         date <= endDate &&
         isWeekday;
+      const isHoveredRange =
+        startDate &&
+        !endDate &&
+        hoveredDate &&
+        date >= startDate &&
+        date <= hoveredDate &&
+        isWeekday;
+
       calendarDays.push(
         <button
           key={i}
           onClick={() => handleDateClick(date)}
+          onMouseEnter={() => handleDateHover(date)}
+          onMouseLeave={() => setHoveredDate(null)}
           className={`calendar-day ${isWeekday ? "weekday" : "weekend"} ${
             isSelected ? "selected" : ""
-          }`}
+          } ${isHoveredRange ? "hovered-range" : ""}`}
         >
           {i}
         </button>
@@ -109,6 +143,9 @@ const WeekdayDateRangePicker: React.FC<WeekdayDateRangePickerProps> = ({
       <h3>Weekday Date Range Picker</h3>
 
       <div className="month-year-selection">
+        <button className="next-prev-button" onClick={handlePreviousMonth}>
+          {"<"}
+        </button>
         <select value={currentMonth} onChange={handleMonthChange}>
           {Array.from({ length: 12 }, (_, index) => (
             <option key={index} value={index}>
@@ -124,6 +161,9 @@ const WeekdayDateRangePicker: React.FC<WeekdayDateRangePickerProps> = ({
             </option>
           ))}
         </select>
+        <button className="next-prev-button" onClick={handleNextMonth}>
+          {">"}
+        </button>
       </div>
 
       <div className="calendar-grid">{renderCalendar()}</div>

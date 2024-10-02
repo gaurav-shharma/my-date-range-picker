@@ -18,12 +18,14 @@ body {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+  gap: 8px;
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
+  margin-top: 24px;
 }
 
 .calendar-day {
@@ -46,6 +48,11 @@ body {
 .calendar-day.selected {
   background-color: #4caf50;
   color: white;
+}
+
+.calendar-day.hovered-range {
+  color: white;
+  border: 1px solid #4caf50;
 }
 
 .predefined-ranges {
@@ -71,7 +78,6 @@ body {
 select {
   width: 100%;
   padding: 8px;
-  margin: 4px;
   border: 1px solid #444;
   border-radius: 4px;
   background-color: #3b3b3b;
@@ -99,7 +105,26 @@ option {
   font-weight: bold;
   color: #ffffff;
   background-color: #3b3b3b;
-  padding: 5px 0;
+  padding: 5px;
   border-radius: 4px;
   border: 1px solid #444;
+  font-size: 12px;
+}
+
+.next-prev-button {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #3b3b3b;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #4caf50;
+  transition: background-color 0.3s ease;
+}
+
+.next-prev-button:hover {
+  background-color: #4caf50;
+  color: white;
 }
