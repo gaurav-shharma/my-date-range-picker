@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Live Preview
+
+[Click to see in action](https://my-daterange-picker.netlify.app/)
+
 ## Available Scripts
 
 In the project directory, you can run:
